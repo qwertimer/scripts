@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+test -n "$BASH_DASHX" && set -x
+
+mkdir -p "$HOME/.local/bin" || true
+
+for i in vim lynx gh git tmux; do
+  cd $i && ./setup
+  cd -
+done

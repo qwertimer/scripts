@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+## Use with caution. This script moves resolv.conf to a backup and copies across the current resolv.conf from the host system.
+mount --bind /dev dev
+mount -t proc proc proc
+mount -t sysfs sysfs sys
+
+#Move current resolv.conf to a backup inside the chroot jail
+mv ./etc/resolv.conf ./etc/resolv.conf_bak
+
+#move host 
+cp /etc/resolv.conf ./etc/resolv.conf
+cp `which chrootexit` ./home/chrootexit
+chroot . bash
+
+

@@ -1,0 +1,4 @@
+#!/bin/sh
+#Dmenu for easily finding a manual to open from a list of all manuals.
+
+man $(apropos --long . | dmenu -i -l 30 | awk '{print $2, $1}' | tr -d '()')

@@ -1,0 +1,108 @@
+#!/bin/bash
+
+
+#This script is a quick getup and going for the github integrated issue based task manager of mine. The commands that are used are simple and easy to work with and are seen in this scripts folder.
+#To work with the scripts a couple of setups are needed. We first must create the tasks folder which is located inside the repos/github directory. Once the folder is created we can initialise the repository and either git pull the current tasks repository or begin a new repository. The scripts below are setup to allow either approach. The script also gets and pulls my newtask, closetask and listtasks scripts and places them in the scripts folder.
+: "${GHUSER:=qwertimer}"
+: "${GHREPO:=$HOME"/repos/github.com/"$GHUSER}"
+: "${tasks:=github.com/qwertimer/tasks}"
+: "${HELP_BROWSER:=lynx}"
+declare -A help
+
+help[initialisation]="Initialises the repository for use with the taskman. It is up to the user to add the git repository to github using gh repo create. Following this the user must push the repo to gihub to initialise the project. If you wish to add shortcuts alasesuncomment the last line."
+
+x_initialisation() {
+
+  mkdir -p "$GHREPO"/"$1"
+  cd "$GHREPO"/"$1"
+  git init
+  touch README.md
+  cat << EOF
+    You will now need to run the command to add the repo to github using
+    gh repo create and follow the instructions. Once completed add the README.md file to
+    repo with git add . git commit -m "new README.md" git push -u origin master
+EOF
+
+  #echo -e 'alias st="taskman listtasks"\nalias nt="taskman newtask"\nalias ct="taskman closetask"' >> ~/.bashrc
+ }
+
+
+help[newtask]="Creates a new task using Github issues and allows the user to add in the message, The program moves to the repo and then starts a issue with gh"
+
+x_newtask() {
+
+  gh issue create -R "$tasks" -t "$*" | dmenu -p
+}
+
+help[closetask]="Closes the numbered task using gh command. The program moves to the nominated folder and then requests to close the issue"
+x_closetask() {
+
+  gh issue close -R "$tasks" "$*"
+}
+
+help[listtask]="Lists all currently open tasks at the specified folder"
+x_listtasks() {
+
+gh issue list -R "$tasks"
+
+}
+
+help[viewtask]="Will show the issue that you requested. with viewtask #Number"
+x_viewtask() {
+  gh issue view -R "$tasks" "$*"
+}
+
+
+x_directory() {
+  cd $tasks 
+  echo $tasks
+}
+  
+
+
+# ---------------------------- help functionality ----------------------------
+_make_html() {
+  local name=${1:-main}
+  local title="$EXE $name"
+  [[ $name = main ]] && title="$EXE"
+  pandoc -s --metadata title="$title" \
+    -o "/tmp/$name-help.html" <<< "${help[$name]}"
+}
+
+x_help() { 
+  local name=${1:-main} 
+  local file="/tmp/$name-help.html"
+  if [[ -n "$HELP_BROWSER" ]];then
+    _make_html "$name"
+    exec "$HELP_BROWSER" "$file"
+  else
+    pandoc -s -t plain  <<< "${help[${1:-main}]}" | more
+  fi
+}
+
+# ------------------------------ bash completion -----------------------------
+
+while read -r line; do
+  [[ $line =~ ^declare\ -f\ x_ ]] || continue
+  COMMANDS+=( ${line##declare -f x_} )
+done < <(declare -F)
+
+
+if [[ -n $COMP_LINE ]]; then
+
+    for c in "${COMMANDS[@]}"; do
+        [[ ${c:0:${#2}} == "${2,,}" ]] && echo "$c"
+    done
+fi
+
+# ---------------------------- delegation ----------------------------
+
+declare cmd="$1"; shift
+for c in ${COMMANDS[@]}; do
+    if [[ $c == "$cmd" ]]; then
+      "x_$cmd" "$@"
+      exit $?
+    fi
+done
+
+

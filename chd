@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# cd ... instead of cd ../..
+if [[ $# > 0 ]]; then
+  if [ ${1:0:2} == ".." ]; then
+    rest=${1:2}
+    rest=${rest//./../}
+    builtin cd "${1:0:2}/${rest}"
+  else
+    builtin cd "$1"
+  fi
+else
+  builtin cd "$@"
+fi
+  # pretty much do this regardless
+ls
+
+
+

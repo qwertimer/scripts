@@ -1,0 +1,3 @@
+#!/bin/sh
+
+wal -a 70 -i ~/wallpapers/wallpapers >>/dev/null

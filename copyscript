@@ -1,0 +1,22 @@
+#!/bin/bash
+# Developed by: qwertimer
+#script to copy and save to a file. Then you can call it back whenever. This will be a shortcut and a keybinding.
+declare -a files
+cutstrings() {
+
+  file=`mktemp`
+  if [[ -s /dev/stdin ]]; then
+    while IFS=$'\n' read -r argline; do
+      
+      echo $argline >> $file
+      echo $argline
+      export lastcut=$file
+     done
+
+  fi
+
+}
+  
+
+
+cutstrings "$@"

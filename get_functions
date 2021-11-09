@@ -1,0 +1,6 @@
+#!/bin/bash
+#Not completely working
+
+IFS=$'\n' read -d "" -ra functions < <(declare -F)
+printf '%s\n' "${functions[@]//declare -f }"
+IFS=''

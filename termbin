@@ -1,0 +1,17 @@
+#!/bin/bash
+
+termbin() {
+
+if ! command -v nc &> /dev/null; then
+
+    echo "nc not found"
+    exit
+else
+    "$@" | nc termbin.com 9999
+fi
+}
+
+
+
+termbin "$@"
+

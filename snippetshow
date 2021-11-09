@@ -1,0 +1,26 @@
+#!/bin/bash
+declare -a array
+declare -a SPLITS 
+SNIPS="$HOME/repos/github.com/qwertimer/.dotfiles/snippets/"
+#test=grep -r -l '.*' "$SNIPS/"
+
+readarray -d '' array < <(find "$SNIPS" -print0)
+printf $array
+
+exit
+while read line; do
+    printf $line
+    SPLITS+=("${line##*/}")
+  done <<<"$SNIPPETS"
+printf $SPLITS
+exit
+FILE=`("$FILELIST") | xargs (/usr/bin/rofi -dmenu)`
+#FILE=${FILE##*/}
+echo $FILE
+exit
+if [ -f "$FILE" ]; then
+  DATA=$([ -x "$FILE" ] && bash "$FILE" || head --bytes=-1 "$FILE")
+  printf "%s" $DATA
+fi
+
+

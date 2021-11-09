@@ -1,0 +1,9 @@
+#!/bin/sh
+# Developed by Qwertimer
+# uploads a file to 0x0, taken from baberbenni -- https://github.com/paperbenni/bash/tree/master/0x0 
+
+ls "$1" >/dev/null || (echo "file not found" && return)
+curl -# -F "file=@$1" "https://0x0.st"
+
+
+

@@ -1,0 +1,27 @@
+#!/bin/sh
+. ~/.bashrc
+HOME=/home/tim
+LOGNAME=tim
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/home/tim/.local/bin/scripts
+LANG=en_US.UTF-8
+SHELL=/bin/sh
+PWD=/
+
+mailsend() {
+  mutt -s "new ip" delltim@gmail.com <  ~/.ip.txt
+}
+
+
+
+if ! [ -f $HOME/.ip.txt ]; then
+    touch $HOME/.ip.txt
+fi
+ip=$(myip)
+old_ip=$(cat $HOME/.ip.txt)
+echo "sending Mail"
+if [ "$ip" != "$old_ip" ]; then
+    echo $ip > $HOME/.ip.txt
+    mailsend
+
+fi
+

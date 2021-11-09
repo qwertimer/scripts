@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# shellcheck disable=SC2016
+set -e
+
+
+# --------------------------- Environment variables --------------------------
+: ${HELP_BROWSER:=lynx}
+: ${PAGER:=more}
+: ${EDITOR:=vi}
+EXE="${0##*/}"
+
+declare -A help
+
+
+help[ix2me]=' 
+The ix2me command will take a web address and curl it to a temp file in tmp. Whilst this command is designed for ix it can be used for all web scripts. The program will take the web address and send it to a temporary file in the temp directory. The script will then output the location to the terminal. It also creates an environment variable that can be used to load the last curled file with vim or another program.'
+
+
+x_ix2me() {
+echo "$*"
+FILE=$(mktemp)
+curl "$*" > $FILE
+echo "$FILE"
+
+}
+
+
+# ----------------------------------- Usage ----------------------------------
+x_usage() {
+    local cmds="${COMMANDS[*]}"
+    printf "usage: %s (%s)\n" "${0##*/}" "${cmds// /|}"
+}
+
+
+# ----------------------------------- help -----------------------------------
+
+help[help]='
+The `help` command prints help information. If no argument is passed
+displays general help information (main). Otherwise, the documentation
+for the specific argument keyword is displayed, which usually
+corresponds to a command name (but not necessarily). All documentation
+is written in CommonMark (Markdown) and will displayed as Web page if
+`pandoc` and `$HELP_BROWSER` are detected, otherwise, just the Markdown is
+sent to `$PAGER` (default: more).'
+
+x_help() { 
+  local name="$1"
+  if [[ -z "$name" ]];then
+    for c in "${COMMANDS[@]}"; do
+      x_help "$c" buildonly
+    done
+    x_help main
+    return 0
+  fi
+  local title="$EXE $name"
+  [[ $name = main ]] && title="$EXE"
+  local file="/tmp/help-$EXE-$name.html"
+  if _have pandoc ; then
+    if _have "$HELP_BROWSER" ; then
+      pandoc -s --metadata title="$title" \
+        -o "$file" <<< "${help[$name]}"
+
+      [[ -z "$2" ]] && cd /tmp && exec "$HELP_BROWSER" "$file"
+      return 0
+    fi
+    pandoc -s --metadata title="$title" \
+      -t plain <<< "${help[$name]}" | "$PAGER"
+    return 0
+  fi
+  echo "${help[$name]}" | "$PAGER"
+}
+
+# ---------------------------------- filter ----------------------------------
+
+_have(){ type "$1" &>/dev/null; }
+
+_filter(){
+  (( $# > 0 )) && return 0
+  while IFS= read -ra args; do
+    "${FUNCNAME[1]}" "${args[@]}"
+  done
+}
+
+# --------------------- completion and delegation --------------------
+while IFS= read -r line; do
+    [[ $line =~ ^declare\ -f\ x_ ]] || continue
+    COMMANDS+=( "${line##declare -f x_}" )
+done < <(declare -F)
+
+if [[ -n $COMP_LINE ]]; then
+    line=${COMP_LINE#* }
+    for c in "${COMMANDS[@]}"; do
+        [[ ${c:0:${#line}} == "${line,,}" ]] && echo "$c"
+    done
+    exit
+fi
+
+for c in "${COMMANDS[@]}"; do
+    if [[ $c == "$EXE" ]]; then
+        "x_$EXE" "$@"
+        exit $?
+    fi
+done
+
+declare cmd="$1"; shift
+for c in "${COMMANDS[@]}"; do
+    if [[ $c == "$cmd" ]]; then
+        "x_$cmd" "$@"
+        exit $?
+    fi
+done
+
+
+x_usage "$@"

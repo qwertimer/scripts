@@ -1,0 +1,5 @@
+#!/bin/sh
+
+cd ~/repos/github.com/qwertimer/tasks/
+gh issue list
+cd -

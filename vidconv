@@ -1,0 +1,9 @@
+#!/bin/bash
+
+FILES=$PWD/*
+for f in $FILES; do
+  out=${f##*/}
+  echo $out
+ffmpeg -i "$f"  -map 0:a -map 0:v -vcodec libx265 -crf 28 -c copy  ~/Videos/"$out".mp4
+done
+

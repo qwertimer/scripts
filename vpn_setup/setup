@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Developed by qwertimer
+# Simple configuration of nordvpn to automatically setup in correct
+# mode.
+nordvpn set autoconnect enable
+nordvpn set killswitch enable
+nordvpn set obfuscate enable
+nordvpn set dns 9.9.9.9 8.8.8.8
+nordvpn whitelist add port 22 protocol tcp
+nordvpn whitelist add port 1066 protocol tcp
+nordvpn set cybersec enable
+nordvpn connect

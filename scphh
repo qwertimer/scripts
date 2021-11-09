@@ -1,0 +1,2 @@
+#!/bin/sh
+scp $1 $2  && ssh `echo $2 | sed ''s/:.*$//''` ; 

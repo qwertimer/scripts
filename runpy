@@ -1,0 +1,33 @@
+#!/bin/bash
+
+
+## Taken from stackexchange -- Qwertimer.
+#This is a simple script to run a python file everytime the file is updated. 
+#Made for testing. Do not use for aanything that will break your system or program. Use with Caution.
+# As runpy is calling PWD allways run this inside the folder with the
+# file you are editing. This saves overhead on remembering path, the
+# program will fail and not exit if there is no file so ctrl-d will get
+# you out of trouble. At some stage i will add a check for the file and
+# if it is not there to exit safely.
+
+runpy() {
+### Set initial time of file
+LTIME=`stat -c %Z "$PWD/$1"`
+
+while true
+do
+   ATIME=`stat -c %Z "$PWD/$1"`
+
+   if [[ "$ATIME" != "$LTIME" ]]
+   then
+       python3 "$PWD/$1"
+       LTIME=$ATIME
+   fi
+   sleep 5
+done
+}
+
+
+runpy $@
+
+

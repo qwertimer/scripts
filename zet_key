@@ -1,0 +1,2 @@
+#!/bin/sh
+gnome-terminal -- "/home/tim/repos/github.com/qwertimer/.dotfiles/scripts/zet"

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Takes the xev xevent key output and prints only the name and number of the binding
+
+xev | awk -F'[ )]+' '/^KeyPress/ { a[NR+2] } NR in a { printf "%-3s %s\n", $5, $8 }'

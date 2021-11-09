@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#snippet directory with a bash base.
+: "${BASE:=$GHREPOS/.dotfiles/snippets/sh/bash_base}"
+
+[ ! -n "${SCRIPTS}" ] && echo "SCRIPTS not set" && exit 1;
+[ ! -n "${1}" ] && echo "usage: newscript <name>" && exit 1;
+
+path="${SCRIPTS}/${1}"
+
+if [ -e "${path}" ]; then
+  read -p "${1} already exists. Edit? " yes 
+  case "${yes}" in
+    y*|ok*) exec vim "${path}"
+  esac
+  exit 0
+fi
+
+while IFS='' read -r line; do
+  printf '%s\n' "$line" >> "${path}"
+done < <(cat "$BASE")
+
+chmod +x "${path}" 
+exec vim +2 "${path}"

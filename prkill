@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# Description: Simple program to kill a specific process from the command line. This uses ps, grep, awk and substring
+# searching. Not the most elegent way to kill a program.
+
+file=$1
+first=${file:0:1}       #get first letter
+grepfirst=["$first"]   #used to remove grep command from ps
+last=${file#$first*}    ## alternative  last=$(cut -d $first -f2 <<< $file) #get everythin after the first letter
+res=$grepfirst$last
+echo "$res"
+kill -9 $(ps u | grep $res | awk '{print $2}')

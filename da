@@ -1,0 +1,15 @@
+#!/bin/bash
+
+container_name="$@"
+
+[ ! `docker inspect --format='{{.Name}}' $(sudo docker ps -aq --no-trunc) | grep "$container_name"` ]  && echo "Container doesn't exist exiting" && exit
+echo "Container $container_name found attaching"
+
+if [ ` docker container inspect -f '{{.State.Running}}' "$container_name" ` == "true" ]; then
+  docker attach "$container_name" 
+else
+
+  docker start "$container_name" 
+  docker attach "$container_name"
+fi
+

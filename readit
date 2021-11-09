@@ -1,0 +1,3 @@
+#!/bin/sh
+{ [ -f "$*" ] && [ -r "$*" ]; } || return 1
+	espeak -v en+m3 -g 5 -p 13 -s 0.7 < "$*"

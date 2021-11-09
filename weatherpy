@@ -1,0 +1,32 @@
+#!/bin/python
+
+import requests
+from dotenv import dotenv_values
+
+base_url = "http://api.openweathermap.org/data/2.5/weather?"
+config = dotenv_values(".env")
+api_key = config["api_key"]#Vars from .env
+print(api_key)
+city_name = "2172674"
+complete_url = f"{base_url}&q={city_name}&appid={api_key}"
+print(complete_url)
+response = requests.get(complete_url)
+x = response.json()
+
+
+if x["cod"] != "404":
+    y = x["main"]
+
+    current_temperature = y["temp"]
+    z = x["weather"]
+
+    weather_description = z[0]["description"]
+
+    print(" Temperature (in kelvin unit) = " +
+                    str(current_temperature) +
+          "\n description = " +
+                    str(weather_description))
+else:
+    print("City not found")
+     
+

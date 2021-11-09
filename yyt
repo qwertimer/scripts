@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Description: Copies lines into a dedicated tempory directory with a searchable list for future queries. Used to store git files and other tidbits for testing.
+: "${tmplist="/tmp/tmplist"}"
+file=`mktemp`
+
+while IFS= read -r line; do
+    echo "$line" >> "$file"
+    echo "$line"
+done
+#copy to xclip for pasting elsewhere
+
+echo "$file" >> "$tmplist"
+cat "$file" | xclip

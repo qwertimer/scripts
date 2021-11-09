@@ -1,0 +1,15 @@
+#!/bin/bash
+
+WLAN=wlp5s0
+LAN=enp6s0
+echo "Starting DHCP server for $LAN, sharing connection $WLAN..."
+sudo systemctl start dnsmasq.service
+echo "Adding allow rules to firewall..."
+sudo ufw route allow in on $LAN out on $WLAN comment "dhcp gateway routing"
+echo "Adding IP routes..."
+echo 1 | sudo tee /proc/sys/net/ipv4/ip_forward > /dev/null
+sudo iptables -t nat -A POSTROUTING -o $WLAN -j MASQUERADE
+sudo iptables -A FORWARD -i $LAN -o $WLAN -j ACCEPT
+sudo iptables -A FORWARD -i $WLAN -o $LAN -m state --state RELATED,ESTABLISHED -j ACCEPT
+echo "Tailing DHCP leases file:"
+tail -f /var/lib/misc/dnsmasq.leases

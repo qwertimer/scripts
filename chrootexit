@@ -1,0 +1,8 @@
+#!/bin/sh
+
+umount proc
+umount sys
+umount dev
+
+mv /etc/resolv.conf_bak /etc/resolv/conf
+rm /home/chrootexit

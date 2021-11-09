@@ -1,0 +1,10 @@
+#!/bin/sh
+tmux new-session -d -s rob -n weechat
+tmux new-window -t rob -d -n mpv
+tmux select-window -t rob:weechat
+tmux send-keys -t rob:weechat "weechat" Enter
+tmux send-keys -t rob:weechat "/connect twitch" Enter
+sleep 2 && tmux send-keys -t rob:weechat "/join #rwxrob" Enter
+tmux select-window -t rob:mpv 
+tmux send-keys -t rob:mpv "exec mpv "https://www.twitch.tv/rwxrob" 2>/dev/null 2>&1 &" Enter
+tmux -u attach -t rob

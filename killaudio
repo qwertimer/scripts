@@ -1,0 +1,6 @@
+#!/bin/sh
+# Developed by: qwertimer
+
+sudo killall pulseaudio; pulseaudio -k
+sleep 10
+pulseaudio --start

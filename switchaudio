@@ -1,0 +1,11 @@
+#!/bin/sh
+
+#devices
+bt="alsa_input.usb-046d_0825_2AC52CD0-02.mono-fallback"
+headphone="alsa_output.pci-0000_0d_00.4.analog-stereo"
+
+if [ "$curr_device" = "$bt" ]; then
+    pactl set-default-sink "$headphone"
+else
+    pactl set-default-sink "$bt"
+fi

@@ -1,0 +1,2 @@
+!#/bin/bash
+ps --user $USER -o pid,time,pmem,pcpu,comm --sort=-pmem | head -n 6

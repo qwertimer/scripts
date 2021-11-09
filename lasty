@@ -1,0 +1,3 @@
+#!/bin/sh
+
+tail -1 "/tmp/tmplist"

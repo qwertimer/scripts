@@ -1,0 +1,2 @@
+#!/bin/sh
+echo "export SCRIPTS='$HOME/repos/github.com/qwertimer/.dotfiles/scripts'" >> ~/.bashrc-personal

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+IFS=''
+file=$1
+shift
+while read line; do
+  echo $line >> $file
+done

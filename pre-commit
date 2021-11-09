@@ -1,0 +1,8 @@
+#!/bin/sh
+
+branch="$(git branch --show-current)"
+if [ "${branch}" = "master" -o "${branch}" = "main" ]; then
+    echo "\e[31m\e[5m Warning: \e[34m\e[0mwe don't push to ${branch}."
+    exit 1
+fi
+

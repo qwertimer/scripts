@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# Developed by Qwertimer -- https://github.com/qwertimer
+# This program extends on rwxrobs duck command or ? command. The idea
+# here is that if i am running in a tmux session i can call this from
+# inside vim and it will open up a lynx page on window 9. This hopes
+# that you do not have too many windows open to have this script
+# overwrite window 9. The script also checks whether you are running in
+# tmux or not if not it will execute duck as is. The line if [ $val ...
+# checks whether you ran this from within vim and will send a message to
+# that window to press enter to remove the annoyance of the press any
+# key to continue message that appears when you run external commands.
+
+
+if ! test "$TERM" = "screen" && test -n "$TMUX" ;  then
+
+    val=`tmux lsw -F '#{window_name}#{window_active}'|sed -n 's|^\(.*\)1$|\1|p'`
+    tmux has-session -t $session:9 2>/dev/null 
+    if [ $? = 0 ]; then 
+        tmux send-keys -t $session:9 "q exit" Enter
+    fi
+    tmux new-window -t $session:9 
+    tmux send -t $session:9 "printf '\ec'" Enter
+    tmux send -t $session:9 "lynx 'https://lite.duckduckgo.com/lite?kd=-1&kp=-1&q=$*'" Enter
+    tmux select-window -t $session:9
+
+    if [ $val = "vim" ]; then 
+        tmux send-keys -t $session:$val "C-m"
+    fi
+else
+    printf '\ec'
+    lynx "https://lite.duckduckgo.com/lite?kd=-1&kp=-1&q=$*"
+fi

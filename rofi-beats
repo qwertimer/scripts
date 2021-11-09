@@ -1,0 +1,83 @@
+#!/bin/sh
+
+notification(){
+	
+	notify-send "Now Playing:"$1" Radio ☕️🎶"
+
+}
+
+menu(){
+	printf "1: Lofi Girl\n"
+	printf "2: Chillhop\n"
+	printf "3: Box Lofi\n"
+	printf "4: The Bootleg Boy\n"
+	printf "5: Radio Spinner\n"
+	printf "6: SmoothChill\n"
+    printf "7: Rob\n"
+	printf "8: Hope 103.2\n"
+	printf "9: Hope Christmas\n"
+	printf "10: Christmas Songs\n"
+	printf "11: Christmas Lofi\n"
+
+}
+
+
+main() {
+	menu_choice=$(menu | rofi -dmenu)
+
+  name="${menu_choice#*:}"
+  notification "$name"
+  
+	choice="${menu_choice%:*}"
+	case $choice in
+		1)
+			mpv "https://play.streamafrica.net/lofiradio"
+			break
+			;;
+		2)
+			mpv "http://stream.zeno.fm/fyn8eh3h5f8uv"
+			break
+			;;
+		3)
+			mpv "http://stream.zeno.fm/f3wvbbqmdg8uv"
+			break
+			;;
+		4)
+			mpv "http://stream.zeno.fm/0r0xa792kwzuv"
+			break
+			;;
+		5)
+			mpv "https://live.radiospinner.com/lofi-hip-hop-64"
+			break
+			;;
+		6)
+			mpv "https://media-ssl.musicradio.com/SmoothChill"
+			break
+			;;
+		7)
+		  mpv "https://www.twitch.tv/rwxrob" --no-video
+			break
+			;;
+		8)
+			mpv "https://stream.hopemedia.com.au/hope-mp3"
+			break
+			;;
+			
+		9)
+			mpv "https://stream.hopemedia.com.au/christmashope-mp3"
+			break
+		;;
+			
+		10)
+			mpv "https://www.youtube.com/watch?v=NUtBQiKa-WU" --no-video
+			break
+			;;
+
+		11)
+			mpv "https://www.youtube.com/watch?v=75LR1d9_mtM" --no-video
+			break
+			;;
+	esac
+}
+
+pkill -f http || main

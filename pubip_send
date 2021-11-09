@@ -1,0 +1,14 @@
+#!/bin/sh
+
+
+touch $HOME/Documents/mail.txt &>/dev/null
+#TMP=$(mktemp)
+IP=`dig +short myip.opendns.com @resolver1.opendns.com`
+echo $IP
+OLD_IP=`cat $HOME/Documents/mail.txt`
+echo $OLD_IP
+if test "$IP" != "$OLD_IP"; then
+   	    echo "$IP" > $HOME/Documents/mail.txt
+        curl -K ~/Documents/curl/gmail https://www.gmail.com
+fi 
+

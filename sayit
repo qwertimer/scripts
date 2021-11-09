@@ -1,0 +1,2 @@
+#!/bin/sh
+espeak -v en -g 5 -p 13 -s 0.7 "$*"

@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo "What is the name of the album you are downloading?"
+read -e -p "Album Name:" albumname
+echo "What is the name of the artist?"
+read -e -p "Artist Name:" artistname
+echo "What is the URL of the playlist you wish to download"
+read -e -p "URL: " PLAYLIST_URL
+
+cd ~/Music
+#cd /Users/Annie/Music/
+mkdir -p "$artistname"/"$albumname"
+cd "$artistname"/"$albumname"
+
+
+youtube-dl -j --flat-playlist "$PLAYLIST_URL" | jq -r '"https://youtu.be/"+ .url'| xargs -n 1 -P 8 youtube-dl -o "%(playlist_index)s-%(title)s.%(ext)s" -x --audio-format mp3
+
+
+#youtube-dl --get-id "$PLAYLIST_URL" \
+#  | xargs -I '{}' -P 8 youtube-dl -o "%(title)s.%(exts" -x --restrict-filenames --audio-format mp3 --embed-thumbnail 'https://youtube.com/watch?v={}'
+
+#youtube-dl -o "%(title)s.%(exts" -x --audio-format mp3 --yes-playlist --embed-thumbnail "$urlpath"

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+awk '/^[a-z]/ && last {print $0,"\t",last} {last=""} /^#/{last=$0}' ~/.config/sxhkd/* |
+    column -t -s $'\t' |
+    yad --text-info --back=#282c34 --fore=#46d9ff --geometry=1200x800 
+    #rofi -dmenu -i -markup-rows -no-show-icons -width 1000 -lines 15 -yoffset 40
+

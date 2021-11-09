@@ -1,0 +1,12 @@
+#!/bin/sh
+
+
+iphmount() {
+
+var=`mktemp -d`
+echo "{$var}"
+ifuse $var
+}
+
+
+iphmount $@
